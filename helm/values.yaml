@@ -2,10 +2,11 @@ deploy: true
 
 replicaCount: 1
 groupName: acme.borup.work
+version: main
 
 image:
   repository: quay.io/rhpds/cert-manager-webhook-ibmcis
-  tag: ""
+  tagOverride: ""
   pullPolicy: IfNotPresent
 
 imagePullSecrets: []
@@ -26,10 +27,6 @@ resources:
 
 securityContext:
   runAsNonRoot: true
-  runAsUser: 65532
-  fsGroup: 65532
-  seccompProfile:
-    type: RuntimeDefault
 
 containerSecurityContext:
   allowPrivilegeEscalation: false

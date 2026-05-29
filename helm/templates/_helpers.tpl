@@ -50,9 +50,13 @@ app.kubernetes.io/instance: {{ .Release.Name }}
 {{- end }}
 
 {{- define "webhook.image" -}}
-{{- if .Values.image.tag }}
-{{- printf "%s:%s" .Values.image.repository .Values.image.tag }}
+{{- if eq .Values.version "main" }}
+{{- printf "%s:latest" .Values.image.repository }}
+{{- else if eq (default "" .Values.image.tagOverride) "-" }}
+{{- .Values.image.repository }}
+{{- else if .Values.image.tagOverride }}
+{{- printf "%s:%s" .Values.image.repository .Values.image.tagOverride }}
 {{- else }}
-{{- printf "%s:%s" .Values.image.repository .Chart.AppVersion }}
+{{- printf "%s:%s" .Values.image.repository .Values.version }}
 {{- end }}
 {{- end }}
