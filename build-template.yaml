@@ -1,0 +1,49 @@
+---
+apiVersion: template.openshift.io/v1
+kind: Template
+metadata:
+  annotations:
+    description: cert-manager-webhook-ibmcis Build (Go)
+  name: webhook-ibmcis-build
+
+parameters:
+- name: NAME
+  value: cert-manager-webhook-ibmcis
+- name: GIT_REPO
+  value: git@github.com:rhpds/cert-manager-webhook-ibmcis.git
+- name: GIT_REF
+  value: main
+
+objects:
+- apiVersion: image.openshift.io/v1
+  kind: ImageStream
+  metadata:
+    name: ${NAME}
+  spec:
+    lookupPolicy:
+      local: false
+
+- apiVersion: v1
+  kind: BuildConfig
+  metadata:
+    name: ${NAME}
+  spec:
+    output:
+      to:
+        kind: ImageStreamTag
+        name: ${NAME}:latest
+    postCommit: {}
+    resources: {}
+    successfulBuildsHistoryLimit: 2
+    failedBuildsHistoryLimit: 1
+    runPolicy: Serial
+    source:
+      git:
+        uri: ${GIT_REPO}
+        ref: ${GIT_REF}
+    strategy:
+      type: Docker
+      dockerStrategy:
+        dockerfilePath: Dockerfile
+        pullSecretPolicy: IfNotPresent
+    triggers: []

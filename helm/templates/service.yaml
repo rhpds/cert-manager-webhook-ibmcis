@@ -1,0 +1,18 @@
+{{- if .Values.deploy }}
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "webhook.fullname" . }}
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "webhook.labels" . | nindent 4 }}
+spec:
+  type: {{ .Values.service.type }}
+  ports:
+    - port: {{ .Values.service.port }}
+      targetPort: 6443
+      protocol: TCP
+      name: https
+  selector:
+    {{- include "webhook.selectorLabels" . | nindent 4 }}
+{{- end }}

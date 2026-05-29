@@ -1,0 +1,53 @@
+deploy: true
+
+replicaCount: 1
+groupName: acme.borup.work
+
+image:
+  repository: quay.io/rhpds/cert-manager-webhook-ibmcis
+  tag: ""
+  pullPolicy: IfNotPresent
+
+imagePullSecrets: []
+nameOverride: ""
+fullnameOverride: ""
+
+certManager:
+  namespace: cert-manager
+  serviceAccountName: cert-manager
+
+resources:
+  requests:
+    cpu: 50m
+    memory: 64Mi
+  limits:
+    cpu: 200m
+    memory: 128Mi
+
+securityContext:
+  runAsNonRoot: true
+  runAsUser: 65532
+  fsGroup: 65532
+  seccompProfile:
+    type: RuntimeDefault
+
+containerSecurityContext:
+  allowPrivilegeEscalation: false
+  readOnlyRootFilesystem: true
+  capabilities:
+    drop: ["ALL"]
+
+credentials:
+  secretName: ibmcis-credentials
+  secretKey: api-token
+
+networkPolicy:
+  enabled: true
+
+service:
+  type: ClusterIP
+  port: 443
+
+nodeSelector: {}
+tolerations: []
+affinity: {}
