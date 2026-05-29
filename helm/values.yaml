@@ -37,9 +37,14 @@ containerSecurityContext:
   capabilities:
     drop: ["ALL"]
 
+createNamespace: false
+
 credentials:
   secretName: ibmcis-credentials
   secretKey: api-token
+  bitwarden:
+    enabled: false
+    secretName: ibmcis_credentials
 
 networkPolicy:
   enabled: true
